@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <!-- The counter's own stylesheet — the panel below is its exact markup. -->
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+
+  <!-- Wrapper reserves the scaled-down size; #overlay keeps its native 700x320
+       internally so the counter's CSS layout is untouched. -->
+  <div id="overlayWrap">
+  <main id="overlay">
+    <section class="dan-panel" id="danPanel">
+
+      <div class="loading-wrap" id="loadingWrap">
+        <span class="loading-text" id="loadingText">Loading</span>
+        <span class="loading-bar" aria-hidden="true"></span>
+      </div>
+
+      <div class="premium-border"></div>
+
+      <img class="dan-greek-bg" id="danGreekBg" src="" alt="" aria-hidden="true">
+
+      <div class="overlay-content">
+
+        <!-- TOP: Map context -->
+        <header class="map-header">
+          <div class="map-info">
+            <div class="map-title-wrap" id="mapTitleWrap">
+              <div class="map-title-track" id="mapTitleTrack">
+                <span class="map-title" id="mapTitle">Waiting for beatmap...</span>
+                <span class="map-title map-title-ghost" id="mapTitleGhost" aria-hidden="true">Waiting for beatmap...</span>
+              </div>
+            </div>
+            <span class="map-artist" id="mapArtist">—</span>
+          </div>
+
+          <div class="map-meta">
+            <div class="badges-row">
+              <span class="mod-badge" id="modBadge"></span>
+              <span class="scoring-mode-badge" id="scoringModeBadge" data-mode="reform">◇ Mode: Reform</span>
+            </div>
+            <div class="map-duration-row">
+              <span class="map-duration" id="mapDuration">--:--</span>
+            </div>
+          </div>
+        </header>
+
+        <!-- BOTTOM: Dan rank + MSD -->
+        <div class="dan-core">
+          <div class="dan-main-stats">
+            <span class="chart-family" id="chartFamily"></span>
+            <div class="dan-identity">
+              <span class="dan-name" id="danName">—</span>
+              <img id="danImage" class="signicial-icon" style="display: none;" src="" alt="" />
+              <span class="dan-sub" id="danSub">Sublevel</span>
+            </div>
+            <div class="dan-dp-row" id="danDpRow">
+              <span class="dan-dp-label">DP</span>
+              <span class="dan-dp-value" id="danDpValue">--</span>
+            </div>
+            <div class="intensity-bar" id="intensityBar">
+              <span class="intensity-label">LOW</span>
+              <div class="intensity-slot">
+                <div class="intensity-track">
+                  <div class="intensity-fill" id="intensityFill"></div>
+                </div>
+                <div class="intensity-thumb" id="intensityThumb"></div>
+              </div>
+              <span class="intensity-label">HIGH</span>
+            </div>
+          </div>
+
+          <div class="dan-metrics-box">
+            <span class="dan-metrics" id="danMetrics">--.-</span>
+            <span class="msd-unit">MSD</span>
+            <div class="map-stats-row">
+              <span class="map-stat-item" id="mapSr">--★</span>
+              <span class="map-stat-sep">·</span>
+              <span class="map-stat-item" id="mapBpm">-- BPM</span>
+              <span class="map-stat-sep">·</span>
+              <span class="map-stat-item" id="mapOd">OD --</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+  </div>
+
+  <!-- Controls, styled with the counter's own settings-panel classes -->
+  <div class="cfg-body" id="doControls">
+    <div class="cfg-row">
+      <label class="cfg-label" for="doDanMode">Dan rating</label>
+      <select class="cfg-select" id="doDanMode">
+        <option value="reform">Reform</option>
+        <option value="celestial">Celestial</option>
+        <option value="signicial">Signicial</option>
+        <option value="shoegazer">Shoegazer</option>
+      </select>
+    </div>
+    <div class="cfg-row">
+      <label class="cfg-label" for="doMod">Rate / Mod</label>
+      <select class="cfg-select" id="doMod">
+        <option value="NM">NoMod (1.0x)</option>
+        <option value="DT">DT / NC (1.5x)</option>
+        <option value="HT">HT (0.75x)</option>
+      </select>
+    </div>
+  </div>
+
+  <script src="engine/minacalc.js"></script>
+  <script src="engine/minacalc-glue.js"></script>
+  <script src="engine/danEngine.js"></script>
+  <script src="theme.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

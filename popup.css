@@ -1,0 +1,101 @@
+/* Popup shell. The panel itself is styled entirely by the counter's style.css —
+   this only sizes the popup window and lays out the two selectors below it. */
+
+/* Panel renders at its native 700x320 and is scaled down as a whole, so every
+   proportion stays exactly as the counter draws it. */
+:root { --do-scale: 0.66; }
+
+html, body {
+  margin: 0;
+  width: 462px;              /* 700 * --do-scale */
+  background: #0b0b10;
+  overflow: hidden;
+}
+
+#overlayWrap {
+  width: 462px;              /* 700 * --do-scale */
+  height: 211px;             /* 320 * --do-scale */
+  overflow: hidden;
+}
+
+#overlay {
+  position: relative;
+  width: 700px;
+  height: 320px;             /* the counter's native panel size */
+  transform: scale(var(--do-scale));
+  transform-origin: top left;
+}
+
+#danPanel {
+  width: 700px;
+  height: 320px;
+}
+
+/* Beatmap cover behind the panel, matching the counter's background treatment. */
+#danPanel.has-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--map-bg);
+  background-size: cover;
+  background-position: center;
+  filter: blur(var(--cfg-blur, 6px)) brightness(var(--cfg-brightness, 0.45));
+  z-index: 0;
+}
+
+/* NOTE: do not override .overlay-content's `position: absolute; inset: 0` —
+   that is what stretches it to the panel height so `space-between` can push
+   the dan-core to the bottom. It already sits at z-index 4, above the
+   background layer below. */
+
+/* The whole panel is scaled to 0.66, which leaves the key readouts small.
+   Bump them back up in the panel's own (pre-scale) pixel space, so they grow
+   without disturbing the counter's layout. `.dan-name` is additionally
+   size-guarded in popup.js for long labels (e.g. Celestial "Intermediate IV"). */
+/* Bottom-align the two columns: stretch them to equal height, then push each
+   one's content to the bottom so the intensity bar and the map-stats row share
+   a baseline (flex-end on .dan-core only aligns the boxes, not their last rows). */
+#danPanel .dan-core { align-items: stretch; }
+#danPanel .dan-main-stats,
+#danPanel .dan-metrics-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+#danPanel .dan-name     { font-size: 64px; }
+#danPanel .dan-metrics  { font-size: 52px; }
+#danPanel .msd-unit     { font-size: 15px; }
+#danPanel .dan-dp-value { font-size: 17px; }
+#danPanel .dan-dp-label { font-size: 12px; }
+
+/* Selectors */
+#doControls {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 11px 13px 13px;
+  background: #0b0b10;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+#doControls .cfg-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+}
+
+/* Fixed label column keeps both selects aligned and stops any overlap. */
+#doControls .cfg-label {
+  white-space: nowrap;
+  flex: 0 0 96px;
+  font-size: 14px;
+}
+
+#doControls .cfg-select {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 5px 8px;
+  font-size: 14px;
+}
