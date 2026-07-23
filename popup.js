@@ -6,9 +6,6 @@
   const T = window.DanTheme;
   const DEFAULTS = { mod: "NM", danMode: "reform" };
   const MODE_LABEL = { reform: "Reform", celestial: "Celestial", signicial: "Signicial", shoegazer: "Shoegazer", ln: "LN" };
-  // Per-system DP ceiling (each estimator's own "beyond" threshold). The intensity
-  // bar scales to the system on screen — a flat /20 only ever fit reform.
-  const DP_MAX = { reform: 20.5, celestial: 35.99, signicial: 18.99, shoegazer: 12.99, ln: 16.99 };
 
   let prefs = Object.assign({}, DEFAULTS);
   let userPickedMode = false; // once true, stop auto-switching to LN for this map
@@ -122,9 +119,12 @@
       .sort((a, b) => b[1] - a[1]).filter((x) => x[1] > 0).slice(0, 2).map((x) => LBL[x[0]]);
     $("chartFamily").textContent = top.length ? top.join(" · ") : (r.family ? String(r.family).toUpperCase() : "");
 
-    // Intensity bar — DP against the on-screen system's own ceiling
-    const dpMax = h.is7k ? 20 : (DP_MAX[mode] || 20);
-    const pct = Math.max(0, Math.min(100, (Number(h.dp) || 0) / dpMax * 100));
+    // Intensity bar is the LOW→HIGH sublevel gauge: position within the current
+    // tier = fractional part of DP (same rule the engine uses for the sublevel
+    // label — SUBLEVEL_LABELS in danEngine). Whole-number part = which tier.
+    const dpv = Number(h.dp) || 0;
+    const frac = dpv >= 1 ? dpv - Math.floor(dpv) : 0;
+    const pct = Math.max(0, Math.min(100, frac * 100));
     $("intensityFill").style.width = pct + "%";
     $("intensityThumb").style.left = pct + "%";
 
