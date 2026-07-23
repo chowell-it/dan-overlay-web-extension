@@ -5,9 +5,13 @@
 
   const T = window.DanTheme;
   const DEFAULTS = { mod: "NM", danMode: "reform" };
-  const MODE_LABEL = { reform: "Reform", celestial: "Celestial", signicial: "Signicial", shoegazer: "Shoegazer" };
+  const MODE_LABEL = { reform: "Reform", celestial: "Celestial", signicial: "Signicial", shoegazer: "Shoegazer", ln: "LN" };
+  // Per-system DP ceiling (each estimator's own "beyond" threshold). The intensity
+  // bar scales to the system on screen — a flat /20 only ever fit reform.
+  const DP_MAX = { reform: 20.5, celestial: 35.99, signicial: 18.99, shoegazer: 12.99, ln: 16.99 };
 
   let prefs = Object.assign({}, DEFAULTS);
+  let userPickedMode = false; // once true, stop auto-switching to LN for this map
   let osuText = null; // cached .osu — switching mod/system never refetches
   let setId = null;
 
@@ -50,7 +54,7 @@
     } else if (danMode === "signicial" && r.signicial) {
       const f = T.SIGNICIAL_PNG[r.signicial.stage_key || ""];
       file = f ? `signicial_images/${f}.png` : "";
-    } else if (danMode === "shoegazer" || r.tier_7k != null) {
+    } else if (danMode === "shoegazer" || danMode === "ln" || r.tier_7k != null) {
       file = "";
     } else {
       const f = T.GREEK_PNG[r.dan_short || ""];
@@ -66,7 +70,10 @@
       return { label: r.tier_7k, sub: r.sublevel_7k, dp: r.dp_7k,
                palette: T.PALETTES_7K[r.tier_7k] || T.PALETTES_7K["Gamma"], is7k: true };
     }
-    const alt = r[danMode];
+    const alt = danMode === "ln" ? r.ln_course : r[danMode];
+    if (danMode === "ln" && alt)
+      return { label: alt.label, sub: alt.ln_family_label || alt.short, dp: alt.dp_ln, beyond: alt.beyond,
+               palette: T.LN_COURSE_PALETTES[alt.stage_key] || T.LN_COURSE_PALETTES["1st"] };
     if (danMode === "celestial" && alt)
       return { label: alt.label, sub: alt.category, dp: alt.dp_celestial, beyond: alt.beyond,
                palette: T.CELESTIAL_PALETTES[alt.tier] || T.CELESTIAL_PALETTES["Beginner"] };
@@ -82,9 +89,18 @@
 
   /* ── Render ──────────────────────────────────────────────────────── */
   function render(r) {
-    const h = headlineFor(r, prefs.danMode);
+    // Auto-switch to LN when the map crosses the LN threshold (engine sets
+    // ln_route === "ln" → ln_course is populated), unless the user has picked a
+    // system themselves. Reflect it in the selector; don't overwrite the stored pref.
+    let mode = prefs.danMode;
+    if (r.ln_course && !userPickedMode) {
+      mode = "ln";
+      $("doDanMode").value = "ln";
+    }
+
+    const h = headlineFor(r, mode);
     applyPalette(h.palette);
-    setWatermark(h.fellBack ? "reform" : prefs.danMode, r);
+    setWatermark(h.fellBack ? "reform" : mode, r);
 
     const name = h.label || "—";
     $("danName").textContent = name;
@@ -106,8 +122,9 @@
       .sort((a, b) => b[1] - a[1]).filter((x) => x[1] > 0).slice(0, 2).map((x) => LBL[x[0]]);
     $("chartFamily").textContent = top.length ? top.join(" · ") : (r.family ? String(r.family).toUpperCase() : "");
 
-    // Intensity bar — DP against its 20-point scale
-    const pct = Math.max(0, Math.min(100, (Number(h.dp) || 0) / 20 * 100));
+    // Intensity bar — DP against the on-screen system's own ceiling
+    const dpMax = h.is7k ? 20 : (DP_MAX[mode] || 20);
+    const pct = Math.max(0, Math.min(100, (Number(h.dp) || 0) / dpMax * 100));
     $("intensityFill").style.width = pct + "%";
     $("intensityThumb").style.left = pct + "%";
 
@@ -128,7 +145,7 @@
 
     $("modBadge").textContent = prefs.mod !== "NM" ? prefs.mod : "";
     const badge = $("scoringModeBadge");
-    const shown = h.fellBack ? "reform" : (h.is7k ? "reform" : prefs.danMode);
+    const shown = h.fellBack ? "reform" : (h.is7k ? "reform" : mode);
     badge.textContent = `◇ Mode: ${MODE_LABEL[shown]}`;
     badge.dataset.mode = shown;
 
@@ -189,6 +206,7 @@
     });
     $("doDanMode").addEventListener("change", (e) => {
       prefs.danMode = e.target.value;
+      userPickedMode = true; // manual pick wins over LN auto-switch
       chrome.storage.local.set({ danMode: prefs.danMode });
       compute(); // system change → just re-render
     });

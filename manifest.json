@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Dan Overlay for osu!web",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Estimated osu!mania dan tier, MSD and Quaver rating for the open beatmap, computed in-browser.",
   "permissions": ["storage", "activeTab"],
   "host_permissions": ["https://osu.ppy.sh/*"],

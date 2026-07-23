@@ -8,13 +8,18 @@
 html, body {
   margin: 0;
   width: 462px;              /* 700 * --do-scale */
+  /* style.css sets html,body{height:100%} for the on-page overlay; in a popup
+     that collapses and Chrome shrinks the window to a sliver. Force intrinsic. */
+  height: auto;
   background: #0b0b10;
   overflow: hidden;
 }
 
 #overlayWrap {
   width: 462px;              /* 700 * --do-scale */
-  height: 211px;             /* 320 * --do-scale */
+  /* 320 * 0.66 = 211.2; +3px headroom so Chrome's fractional-DPI rounding
+     (Win 125%/150%) can't shear the panel's bottom row. Extra px is dark bg. */
+  height: 214px;
   overflow: hidden;
 }
 
