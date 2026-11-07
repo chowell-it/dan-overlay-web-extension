@@ -1,0 +1,28 @@
+# Browser build of Mania Tracker's dan-calc + Prism (6K/7K/8K only).
+# Build: see README.md in this folder.
+[package]
+name = "dan-calc-wasm"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+publish = false
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+dan-calc = { git = "https://github.com/aleju03/mania-hub", rev = "1339369851234d6ed928aa1bd8149a4b558378e6", default-features = false }
+
+# wasmtime can't run in a browser. MinaCalc is only reached on non-Prism
+# keymodes, which this build never rates, so leoblack-ett is swapped for a stub.
+[patch."https://github.com/aleju03/mania-hub"]
+leoblack-ett = { path = "ett-stub" }
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true
+
+[workspace]

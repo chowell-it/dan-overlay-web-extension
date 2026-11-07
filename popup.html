@@ -91,31 +91,24 @@
   </main>
   </div>
 
-  <!-- Controls, styled with the counter's own settings-panel classes -->
-  <div class="cfg-body" id="doControls">
-    <div class="cfg-row">
-      <label class="cfg-label" for="doDanMode">Dan rating</label>
-      <select class="cfg-select" id="doDanMode">
-        <option value="reform">Reform</option>
-        <option value="celestial">Celestial</option>
-        <option value="signicial">Signicial</option>
-        <option value="shoegazer">Shoegazer</option>
-        <option value="ln">LN</option>
-      </select>
-    </div>
-    <div class="cfg-row">
-      <label class="cfg-label" for="doMod">Rate / Mod</label>
-      <select class="cfg-select" id="doMod">
-        <option value="NM">NoMod (1.0x)</option>
-        <option value="DT">DT / NC (1.5x)</option>
-        <option value="HT">HT (0.75x)</option>
-      </select>
-    </div>
+  <!-- Controls -->
+  <div id="doControls">
+    <select class="do-select" id="doDanMode" aria-label="Dan rating"></select>
+    <div class="seg" id="segMod" role="group" aria-label="Rate"></div>
+    <button class="do-export" id="exportBtn" type="button" disabled
+            title="Export note density chart" aria-label="Export note density chart">
+      <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M2 13.5h12M4 10.5V8M8 10.5V3M12 10.5V6"/>
+      </svg>
+    </button>
   </div>
 
   <script src="engine/minacalc.js"></script>
   <script src="engine/minacalc-glue.js"></script>
+  <script src="engine/dancalc-glue.js"></script>
   <script src="engine/danEngine.js"></script>
+  <script src="engine/chart-renderer.js"></script>
   <script src="theme.js"></script>
   <script src="popup.js"></script>
 </body>

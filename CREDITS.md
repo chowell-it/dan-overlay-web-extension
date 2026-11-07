@@ -11,6 +11,9 @@ The dan-tier estimation (Reform / Celestial / Signicial / Shoegazer rulers, the
 `engine/danEngine.js` is a TypeScript reimplementation validated 1:1 against the
 original engine's outputs.
 
+`engine/chart-renderer.js`, the note density chart export, is adapted from Dan
+Overlay's `chart_renderer.js` and `chart_export.py`.
+
 Application icon (`icons/`) is derived from Dan Overlay's `graph.ico`, recomposited
 onto a dark tile for toolbar legibility.
 
@@ -18,12 +21,21 @@ onto a dark tile for toolbar legibility.
 
 `engine/minacalc.js` is **MinaCalc**, the difficulty calculator from
 [Etterna](https://github.com/etternagame/etterna), compiled to WebAssembly.
-Etterna is distributed under the MIT License. MSD values are 4K-only.
+Etterna is distributed under the MIT License. It rates 4K only here.
+
+## Mania Tracker dan-calc and Prism
+
+`engine/dancalc.wasm` is compiled from the `dan-calc` and Prism code in
+[aleju03/mania-hub](https://github.com/aleju03/mania-hub) (MIT License) by
+aleju03. It provides 6K/7K dans and the Prism MSD and LN ratings on 6K-8K. Its
+`leoblack-*` crates are ported from
+[LeoBlackMT/osumania_map_analyser](https://github.com/LeoBlackMT/osumania_map_analyser)
+(MIT License). Build source and the pinned commit are in `native/dan-calc-wasm/`.
 
 ## Quaver difficulty rating
 
 The Quaver rating is a port of `DifficultyProcessorKeys` from
-[Quaver.API](https://github.com/Quaver/Quaver) (MIT License), validated 1:1
+[Quaver.API](https://github.com/Quaver/Quaver.API) (Mozilla Public License 2.0), validated 1:1
 against the reference implementation across 4K and 7K.
 
 ## osu! data
@@ -34,7 +46,8 @@ unofficial and not affiliated with or endorsed by ppy.
 
 ## Privacy
 
-No data is collected, transmitted, or shared. The only network request is the
-same-origin fetch of the `.osu` file for the beatmap you are viewing. The only
+No data is collected, transmitted, or shared. The only network requests are the
+fetch of the `.osu` file for the beatmap you are viewing and that beatmap's cover
+image from `assets.ppy.sh`. The only
 stored state is two UI preferences (`mod`, `danMode`) in `chrome.storage.local`,
 which never leaves your browser.

@@ -1,5 +1,5 @@
 /* Popup shell. The panel itself is styled entirely by the counter's style.css —
-   this only sizes the popup window and lays out the two selectors below it. */
+   this only sizes the popup window and lays out the controls below it. */
 
 /* Panel renders at its native 700x320 and is scaled down as a whole, so every
    proportion stays exactly as the counter draws it. */
@@ -69,38 +69,91 @@ html, body {
 }
 
 #danPanel .dan-name     { font-size: 64px; }
+/* 6K/7K numbered dans hold still; named tiers keep the counter's animation. */
+#danPanel .dan-name.is-static { background-image: var(--dan-gradient); background-size: 100% auto; animation: none; }
+#danPanel .dan-name.is-static::before,
+#danPanel .dan-name.is-static::after { animation: none; }
 #danPanel .dan-metrics  { font-size: 52px; }
 #danPanel .msd-unit     { font-size: 15px; }
 #danPanel .dan-dp-value { font-size: 17px; }
 #danPanel .dan-dp-label { font-size: 12px; }
 
-/* Selectors */
+/* Controls: pill groups in the same dark glass as the panel. */
 #doControls {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 11px 13px 13px;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 8px;
   background: #0b0b10;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-#doControls .cfg-row {
+.seg {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 0;
+  gap: 1px;
+  padding: 2px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 7px;
 }
+.seg[hidden] { display: none; }
 
-/* Fixed label column keeps both selects aligned and stops any overlap. */
-#doControls .cfg-label {
-  white-space: nowrap;
-  flex: 0 0 96px;
-  font-size: 14px;
-}
-
-#doControls .cfg-select {
+.do-select {
   flex: 1 1 auto;
   min-width: 0;
-  padding: 5px 8px;
-  font-size: 14px;
+  height: 28px;
+  padding: 0 6px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 7px;
+  cursor: pointer;
 }
+.do-select:disabled { color: var(--text-dim); cursor: default; opacity: 1; }
+.do-select option { background: #1a1e2e; color: var(--text-main); }
+
+.seg button,
+.do-export {
+  font-family: inherit;
+  color: var(--text-dim);
+  background: none;
+  border: 0;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+}
+
+.seg button {
+  padding: 5px 6px;
+  border-radius: 5px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.seg button:hover,
+.do-export:hover:enabled { color: var(--text-main); }
+.seg button[aria-pressed="true"] {
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 -2px 0 var(--line-color, var(--text-dim));
+}
+
+.do-export {
+  display: flex;
+  flex: 0 0 auto;
+  margin-left: auto;
+  padding: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 7px;
+}
+.do-export:disabled { opacity: 0.4; cursor: default; }
+.do-export.is-busy { animation: modePulse 0.9s ease-in-out infinite; }
+
+.seg button:focus-visible,
+.do-select:focus-visible,
+.do-export:focus-visible { outline: 2px solid var(--text-soft); outline-offset: 1px; }
